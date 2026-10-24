@@ -263,7 +263,7 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
   <div class="wrap">
     <h2><span class="dot" style="background:var(--blue)"></span>航班資訊</h2>
     <div class="flights" id="flightList"></div>
-    <p class="note">※ 航班號與時間請依實際訂位修改（在檔案最下方 <code>FLIGHTS</code> 區塊）。</p>
+    <p class="note">※ 由泰國亞洲航空（AirAsia 集團）執飛，時間皆為當地時間，依公開班表整理，請以電子機票為準。去程 05:55 起飛，建議 03:30 前抵達桃園機場；廉航行李需另購。</p>
   </div>
 </section>
 
@@ -354,10 +354,10 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
 <script>
 /* ====== 可修改：航班 ====== */
 const FLIGHTS = [
-  { label:"去程", color:"var(--pink)", date:"12/11（五）", from:"TPE", fromName:"桃園", to:"CTS", toName:"新千歲", dep:"--:--", arr:"--:--", no:"航班待填", term:"國際線航廈" },
-  { label:"回程", color:"var(--green)", date:"12/16（三）", from:"CTS", fromName:"新千歲", to:"TPE", toName:"桃園", dep:"--:--", arr:"--:--", no:"航班待填", term:"國際線航廈" }
+  { label:"去程", color:"var(--pink)", date:"12/11（五）", from:"TPE", fromName:"桃園", to:"CTS", toName:"新千歲", dep:"05:55", arr:"11:00", no:"AirAsia FD242", term:"桃園第 1 航廈" },
+  { label:"回程", color:"var(--green)", date:"12/16（三）", from:"CTS", fromName:"新千歲", to:"TPE", toName:"桃園", dep:"14:00", arr:"17:55", no:"AirAsia FD243", term:"新千歲國際線航廈" }
 ];
-const DEPART = new Date("2026-12-11T08:00:00+08:00"); // 出發時間（台灣時間），可依航班調整
+const DEPART = new Date("2026-12-11T05:55:00+08:00"); // 出發時間（台灣時間）
 
 /* ====== 圖示 ====== */
 const S = 'stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"';
@@ -376,11 +376,13 @@ const PLANE_SVG = `<svg viewBox="0 0 40 40" class="plane"><path d="M6 22 L32 14 
 // t: jr / metro / bus / tram / walk / air
 const DAYS = [
  { d:"12/11", w:"五", title:"抵達札幌・大通公園燈海", sub:"飛抵新千歲，晚上直奔白色燈樹節", icon:"plane",
-   tip:"12 月札幌白天約 -2~3°C、下午 4 點就天黑，晚上活動記得戴手套和毛帽。",
+   tip:"紅眼班機起得早，入住後先補眠再出門。12 月札幌白天約 -2~3°C、下午 4 點就天黑，記得戴手套和毛帽。",
    items:[
-   {tm:"午後", ti:"抵達新千歲機場", ds:"入境、領行李；機場就可以先買 Kitaca 或用 Suica/ICOCA 搭車。", tags:[["air","飛機"]]},
-   {tm:"＋40分", ti:"JR 快速エアポート → 札幌站", ds:"約 37–40 分鐘，建議坐 u-seat 指定席較舒適。", tags:[["jr","JR 快速"]]},
-   {tm:"15:00", ti:"入住 MyStays 札幌站北口", ds:"從札幌站北口出站步行約 2 分鐘，放好行李稍作休息。", tags:[["walk","步行 2 分"]]},
+   {tm:"05:55", ti:"桃園起飛 AirAsia FD242", ds:"凌晨 03:30 前抵達桃園第 1 航廈報到。", tags:[["air","飛機"]]},
+   {tm:"11:00", ti:"抵達新千歲機場", ds:"入境、領行李；可用 Suica/ICOCA 或在機場買 Kitaca 搭車。", tags:[["air","飛機"]]},
+   {tm:"12:00", ti:"JR 快速エアポート → 札幌站", ds:"約 37–40 分鐘，建議坐 u-seat 指定席較舒適。", tags:[["jr","JR 快速"]]},
+   {tm:"13:00", ti:"寄放行李＋札幌站午餐", ds:"先到 MyStays 寄放行李，再到札幌站 APIA／stellar place 吃味噌拉麵或迴轉壽司。", tags:[["walk","步行 2 分"]]},
+   {tm:"15:00", ti:"入住 MyStays 札幌站北口", ds:"正式入住，補眠休息一下。", tags:[["walk","步行 2 分"]]},
    {tm:"17:00", ti:"大通公園・白色燈樹節", ds:"札幌冬季最經典的燈飾，搭配電視塔一起拍超美。", tags:[["metro","南北線 1 站"],["walk","或步行 15 分"]], must:true},
    {tm:"18:00", ti:"慕尼黑聖誕市集 in Sapporo", ds:"大通公園 2 丁目，熱紅酒、德國香腸、聖誕小物。", tags:[["walk","步行"]], must:true},
    {tm:"19:30", ti:"晚餐：成吉思汗烤羊肉", ds:"薄野一帶名店多（如「だるま」需排隊），或選站前湯咖哩。", tags:[["metro","南北線 薄野站"]]}
@@ -423,22 +425,22 @@ const DAYS = [
    {tm:"11:30", ti:"啤酒園 成吉思汗吃到飽", ds:"札幌ビール園，大份量羊肉＋生啤酒。", tags:[["walk","步行"]]},
    {tm:"13:30", ti:"巴士 → 定山溪溫泉", ds:"札幌站前搭「かっぱライナー号」約 60–70 分鐘（需預約）。", tags:[["bus","定鐵巴士"]]},
    {tm:"15:00", ti:"定山溪 日歸溫泉＋河童散步", ds:"雪景露天風呂，泡完逛二見吊橋、足湯。", tags:[["walk","步行"]], must:true},
-   {tm:"18:30", ti:"巴士返回札幌", ds:"回飯店休息，整理伴手禮與行李。", tags:[["bus","巴士"]]}
+   {tm:"18:30", ti:"巴士返回札幌＋採買伴手禮", ds:"隔天早班機，今晚在札幌站大丸、APIA 把六花亭、ROYCE'、北菓樓買齊。", tags:[["bus","巴士"],["walk","步行"]]}
  ]},
- { d:"12/16", w:"三", title:"採買伴手禮・回家", sub:"最後衝刺，機場也很好逛", icon:"beer",
-   tip:"新千歲機場國內線航廈超好逛，建議預留 3 小時以上。液體類伴手禮記得托運。",
+ { d:"12/16", w:"三", title:"新千歲機場・回家", sub:"早點到機場，最後逛一波", icon:"beer",
+   tip:"14:00 的班機，伴手禮建議前一晚在札幌站買好；新千歲國內線航廈也很好逛。廉航注意行李重量，液體類伴手禮要托運。",
    items:[
-   {tm:"09:00", ti:"札幌站周邊最後採買", ds:"大丸百貨地下美食：六花亭、ROYCE'、北菓樓。", tags:[["walk","步行"]]},
-   {tm:"11:00", ti:"MyStays 退房", ds:"確認護照、充電器、沒漏東西。", tags:[["walk","步行 2 分"]]},
-   {tm:"11:30", ti:"JR 快速エアポート → 新千歲", ds:"約 37–40 分鐘。", tags:[["jr","JR 快速"]]},
-   {tm:"12:30", ti:"新千歲機場美食＆購物", ds:"北海道拉麵道場、ROYCE' 巧克力工廠、哆啦A夢空中樂園。", tags:[["walk","步行"]], must:true},
-   {tm:"依航班", ti:"搭機返台", ds:"國際線航廈報到、出境，帶著滿滿回憶回家！", tags:[["air","飛機"]]}
+   {tm:"08:00", ti:"早餐＋整理行李", ds:"確認護照、充電器、行李重量（AirAsia 限重嚴格）。", tags:[["walk","步行"]]},
+   {tm:"10:00", ti:"MyStays 退房", ds:"退房後直接走到札幌站。", tags:[["walk","步行 2 分"]]},
+   {tm:"10:30", ti:"JR 快速エアポート → 新千歲", ds:"約 37–40 分鐘，11:15 左右抵達機場。", tags:[["jr","JR 快速"]]},
+   {tm:"11:15", ti:"國際線報到＋機場美食", ds:"先托運行李，再去國內線航廈吃拉麵道場、買 ROYCE'。", tags:[["walk","步行"]], must:true},
+   {tm:"14:00", ti:"搭機返台 AirAsia FD243", ds:"17:55 抵達桃園，帶著滿滿回憶回家！", tags:[["air","飛機"]]}
  ]}
 ];
 
 /* ====== 待辦 ====== */
 const TODOS = [
- {g:"證件＆預約", c:"var(--pink)", items:["護照效期 6 個月以上","填寫 Visit Japan Web","旅遊平安險／不便險","列印或存好 MyStays 訂房確認信","預約定山溪かっぱライナー巴士","兌換日圓現金"]},
+ {g:"證件＆預約", c:"var(--pink)", items:["護照效期 6 個月以上","填寫 Visit Japan Web","旅遊平安險／不便險","列印或存好 MyStays 訂房確認信","預約定山溪かっぱライナー巴士","兌換日圓現金","AirAsia 加購托運行李","安排凌晨到桃園機場的交通"]},
  {g:"禦寒裝備", c:"var(--blue)", items:["防水雪靴／防滑鞋","冰爪（鞋底防滑套）","發熱衣褲 + 羽絨外套","毛帽、手套、圍巾","暖暖包","護唇膏、乳液（超乾燥）"]},
  {g:"電子＆其他", c:"var(--green)", items:["日本 eSIM／網卡","行動電源（隨身登機）","手機掛上 Suica/ICOCA","常備藥品","折疊購物袋（裝伴手禮）"]}
 ];
