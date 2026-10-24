@@ -147,6 +147,11 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
   .flights{grid-template-columns:1fr 1fr}
   .hotel{grid-template-columns:1fr 1.2fr;align-items:start}
 }
+.todo-link{display:flex;align-items:center;gap:14px;text-decoration:none;transition:transform .15s}
+.todo-link b{font-weight:400;font-size:18px}.todo-link small{font-size:13px}
+.todo-link .arrow{margin-left:auto;font-size:22px;width:40px;height:40px;border:var(--b);border-radius:50%;display:grid;place-items:center;background:var(--yellow);flex:none}
+.todo-link:hover{transform:translate(-2px,-2px)}
+.todo-link svg{flex:none;border:var(--b);border-radius:18px}
 </style>
 </head>
 <body>
@@ -159,7 +164,7 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
     </span>
     <a class="nl" href="#flight">航班</a>
     <a class="nl" href="#days">行程</a>
-    <a class="nl" href="#todo">待辦</a>
+    <a class="nl" href="todo.html">待辦</a>
     <a class="nl" href="#hotel">住宿</a>
   </div>
 </nav>
@@ -280,18 +285,15 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
   </div>
 </section>
 
-<!-- TODO -->
+<!-- TODO LINK -->
 <section id="todo">
   <div class="wrap">
     <h2><span class="dot" style="background:var(--green)"></span>出發前待辦</h2>
-    <div class="card todo">
-      <div class="todo-top">
-        <div class="bar" aria-hidden="true"><i id="todoBar"></i></div>
-        <span id="todoCount">0 / 0</span>
-        <button class="btn" id="todoReset" type="button">重設</button>
-      </div>
-      <div id="todoList"></div>
-    </div>
+    <a class="card todo-link" href="todo.html">
+      <svg viewBox="0 0 84 84" width="72" height="72" aria-hidden="true"><rect width="84" height="84" rx="18" fill="#B9DAA5"/><g class="float"><rect x="18" y="28" width="48" height="40" rx="8" fill="#F2A497" stroke="#3E3A39" stroke-width="3"/><path d="M32 28v-8h20v8" fill="none" stroke="#3E3A39" stroke-width="3"/><path d="M18 44h48" stroke="#3E3A39" stroke-width="3"/><rect x="36" y="40" width="12" height="9" rx="2" fill="#F6D27A" stroke="#3E3A39" stroke-width="3"/></g></svg>
+      <span><b>打開待辦清單</b><br><small>證件、禦寒裝備、行李…出發前一項項打勾</small></span>
+      <span class="arrow" aria-hidden="true">→</span>
+    </a>
   </div>
 </section>
 
@@ -438,12 +440,6 @@ const DAYS = [
  ]}
 ];
 
-/* ====== 待辦 ====== */
-const TODOS = [
- {g:"證件＆預約", c:"var(--pink)", items:["護照效期 6 個月以上","填寫 Visit Japan Web","旅遊平安險／不便險","列印或存好 MyStays 訂房確認信","預約定山溪かっぱライナー巴士","兌換日圓現金","AirAsia 加購托運行李","安排凌晨到桃園機場的交通"]},
- {g:"禦寒裝備", c:"var(--blue)", items:["防水雪靴／防滑鞋","冰爪（鞋底防滑套）","發熱衣褲 + 羽絨外套","毛帽、手套、圍巾","暖暖包","護唇膏、乳液（超乾燥）"]},
- {g:"電子＆其他", c:"var(--green)", items:["日本 eSIM／網卡","行動電源（隨身登機）","手機掛上 Suica/ICOCA","常備藥品","折疊購物袋（裝伴手禮）"]}
-];
 
 /* ====== 渲染 ====== */
 const $ = id => document.getElementById(id);
@@ -507,29 +503,6 @@ $("dayTabs").addEventListener("keydown", e=>{
 })();
 renderTabs(); renderDay(false);
 
-/* 待辦（存在瀏覽器） */
-const KEY = "sapporo2026-todo";
-let done = {};
-try { done = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) {}
-function save(){ try { localStorage.setItem(KEY, JSON.stringify(done)); } catch(e) {} }
-function renderTodo(){
-  let n=0, all=0;
-  $("todoList").innerHTML = TODOS.map((g,gi)=>`
-    <div class="todo-grp"><span class="dot" style="width:14px;height:14px;border:3px solid var(--ink);border-radius:50%;background:${g.c};display:inline-block"></span>${esc(g.g)}</div>
-    ${g.items.map((t,ti)=>{ const k=gi+"-"+ti; all++; if(done[k]) n++;
-      return `<label><input type="checkbox" data-k="${k}" ${done[k]?"checked":""}><span>${esc(t)}</span></label>`; }).join("")}
-  `).join("");
-  $("todoCount").textContent = n+" / "+all;
-  $("todoBar").style.width = (all? n/all*100:0)+"%";
-}
-$("todoList").addEventListener("change", e=>{
-  const k=e.target.dataset.k; if(!k) return;
-  done[k]=e.target.checked; save();
-  let n=Object.values(done).filter(Boolean).length, all=TODOS.reduce((a,g)=>a+g.items.length,0);
-  $("todoCount").textContent=n+" / "+all; $("todoBar").style.width=(n/all*100)+"%";
-});
-$("todoReset").addEventListener("click", ()=>{ done={}; save(); renderTodo(); });
-renderTodo();
 
 /* 倒數 */
 function tick(){
