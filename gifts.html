@@ -188,6 +188,24 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
 .addf input,.addf select{font-family:inherit;font-size:15px;color:var(--ink);border:2px solid var(--ink);border-radius:12px;padding:8px 10px;background:var(--paper);width:100%}
 .addf button{font-family:inherit;font-size:15px;color:var(--ink);border:var(--b);border-radius:999px;background:var(--green);padding:8px;cursor:pointer}
 @media (min-width:640px){.addf{grid-template-columns:1fr 1fr auto}}
+.acc{display:grid;gap:10px}
+.acc-item{border:var(--b);border-radius:20px;background:var(--white);overflow:hidden}
+.acc-item.open{box-shadow:4px 4px 0 var(--ink);background:#FFF1EE}
+.acc-btn{display:flex;align-items:center;gap:10px;width:100%;font-family:inherit;color:var(--ink);text-align:left;background:none;border:0;padding:12px 14px;cursor:pointer}
+.acc-btn .pin{width:30px;height:30px;flex:none}
+.acc-btn span{flex:1;font-size:16px;line-height:1.35}
+.acc-btn small{display:block;font-size:12.5px}
+.acc-btn .chev{flex:none;width:30px;height:30px;border:2px solid var(--ink);border-radius:50%;display:grid;place-items:center;background:var(--yellow);transition:transform .3s}
+.acc-item.open .chev{transform:rotate(180deg)}
+.acc-body{padding:0 14px 14px}
+.acc-body .sub2{font-size:13.5px;margin-bottom:10px}
+.acc-map{border:var(--b);border-radius:16px;overflow:hidden;background:var(--blue)}
+.acc-map iframe{display:block;width:100%;height:260px;border:0}
+.acc-gifts{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.acc-gifts span{font-size:13px;padding:2px 10px;border:2px solid var(--ink);border-radius:999px;background:var(--white)}
+.acc-gifts span.got{background:var(--green);text-decoration:line-through}
+.acc-nav{display:inline-block;text-decoration:none;font-size:14px;padding:5px 14px;border:var(--b);border-radius:999px;background:var(--pink)}
+.acc-body.pop{animation:pop .45s cubic-bezier(.34,1.56,.64,1)}
 </style>
 </head>
 <body>
@@ -266,9 +284,17 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
   </div>
 </section>
 
+<section id="shops">
+  <div class="wrap">
+    <h2><span class="dot" style="background:var(--blue)"></span>購買地點地圖</h2>
+    <p style="font-size:14px;margin:-8px 0 12px">點一下地點就會展開地圖，以及這裡可以買到的伴手禮。</p>
+    <div class="acc" id="acc"></div>
+  </div>
+</section>
+
 <section id="back" style="padding-top:0">
   <div class="wrap">
-    <p class="note">※ 營業時間與販售品項可能調整，出發前請再到官網確認。點卡片上的地點標籤，就能切換該伴手禮的地圖。</p>
+    <p class="note">※ 營業時間與販售品項可能調整，出發前請再到官網確認。</p>
     <p style="text-align:center;margin-top:20px"><a class="nl" href="index.html" style="text-decoration:none;font-size:15px;padding:6px 16px;border:3px solid var(--ink);border-radius:999px;background:var(--pink)">← 回行程首頁</a></p>
   </div>
 </section>
@@ -346,6 +372,7 @@ function renderFilters(){
   $("filters").innerHTML = AREAS.map(a=>`<button class="chip" type="button" aria-pressed="${a===area}" data-a="${a}">${a}</button>`).join("");
 }
 function renderGifts(){
+  if (typeof renderAcc === "function" && $("acc").childElementCount) renderAcc();
   const list = allGifts().filter(g => area==="全部" || g.s.some(k => SHOPS[k].a===area));
   $("giftList").innerHTML = list.length ? list.map(g=>`
     <article class="card gift ${st.done[g.id]?'done':''}">
@@ -391,7 +418,35 @@ $("addForm").addEventListener("submit", e=>{
   save(); $("addName").value=""; area="全部"; renderFilters(); renderGifts();
 });
 
-renderFilters(); renderGifts();
+
+/* 購買地點 手風琴 */
+let openShop = null;
+function renderAcc(){
+  const gifts = allGifts();
+  $("acc").innerHTML = Object.entries(SHOPS).map(([k,s])=>{
+    const open = k===openShop, here = gifts.filter(g=>g.s.includes(k));
+    return `<div class="acc-item ${open?'open':''}">
+      <button type="button" class="acc-btn" data-acc="${k}" aria-expanded="${open}" aria-controls="acc-${k}">
+        <svg class="pin" viewBox="0 0 30 30" aria-hidden="true"><path d="M15 28 C6 18 5 14 5 11 a10 10 0 0 1 20 0 c0 3-1 7-10 17Z" fill="${open?'#F2A497':'#A8D3E6'}" stroke="#3E3A39" stroke-width="2.5"/><circle cx="15" cy="11" r="3.5" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2"/></svg>
+        <span>${esc(s.n)}<small>${esc(s.a)}・行程 ${esc(s.day)}・可買 ${here.length} 樣</small></span>
+        <i class="chev" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" fill="none" stroke="#3E3A39" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></i>
+      </button>
+      ${open?`<div class="acc-body pop" id="acc-${k}">
+        <p class="sub2">${esc(s.sub)}</p>
+        <div class="acc-map"><iframe title="${esc(s.n)} 地圖" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${encodeURIComponent(s.q)}&z=16&output=embed"></iframe></div>
+        <div class="acc-gifts">${here.map(g=>`<span class="${st.done[g.id]?'got':''}">${esc(g.n)}</span>`).join("") || '<span>尚無清單項目</span>'}</div>
+        <a class="acc-nav" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.q)}" target="_blank" rel="noopener">📍 在 Google 地圖開啟／導航</a>
+      </div>`:''}
+    </div>`;
+  }).join("");
+}
+$("acc").addEventListener("click", e=>{
+  const b=e.target.closest(".acc-btn"); if(!b) return;
+  openShop = openShop===b.dataset.acc ? null : b.dataset.acc;
+  renderAcc();
+  if(openShop) b.scrollIntoView({block:"nearest", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto":"smooth"});
+});
+renderFilters(); renderGifts(); renderAcc();
 </script>
 </body>
 </html>
