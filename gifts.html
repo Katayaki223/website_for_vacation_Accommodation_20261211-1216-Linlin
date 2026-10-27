@@ -171,10 +171,11 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
 .ck:checked{background:var(--green)}
 .ck:checked:after{content:"";width:6px;height:11px;border:solid var(--ink);border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}
 .del{font-family:inherit;font-size:12px;border:2px solid var(--ink);border-radius:999px;background:var(--pink);padding:2px 10px;cursor:pointer;color:var(--ink)}
-.mapbox{border:var(--b);border-radius:var(--r);overflow:hidden;background:var(--blue);box-shadow:4px 4px 0 var(--ink)}
-.mapbox iframe{display:block;width:100%;height:300px;border:0}
-.maphead{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;background:var(--white);border-bottom:var(--b)}
-.maphead b{font-weight:400;font-size:17px}
+.mapbox{grid-column:1/-1;border:var(--b);border-radius:18px;overflow:hidden;background:var(--blue)}
+.mapbox iframe{display:block;width:100%;height:220px;border:0}
+.loc[aria-pressed="true"]{background:var(--pink);box-shadow:2px 2px 0 var(--ink)}
+.maphead{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;background:var(--white);border-bottom:var(--b)}
+.maphead b{font-weight:400;font-size:15px}
 .maphead small{display:block;font-size:12.5px}
 .maphead a{flex:none;text-decoration:none;font-size:13px;padding:4px 12px;border:2px solid var(--ink);border-radius:999px;background:var(--pink)}
 .shops{display:grid;gap:8px;margin-top:14px}
@@ -238,7 +239,7 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
       </svg>
     </div>
     <h1>北海道伴手禮清單</h1>
-    <p class="sub">經典必買＋在哪裡買＋地圖，買好就打勾</p>
+    <p class="sub">每樣伴手禮都附購買地點地圖，買好就打勾</p>
     <div class="countdown" style="grid-template-columns:repeat(2,1fr)">
       <div class="cd" style="background:var(--yellow)"><b id="gBought">0</b><span>已買</span></div>
       <div class="cd" style="background:var(--green)"><b id="gTotal">0</b><span>清單總數</span></div>
@@ -265,18 +266,9 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
   </div>
 </section>
 
-<section id="map">
+<section id="back" style="padding-top:0">
   <div class="wrap">
-    <h2><span class="dot" style="background:var(--blue)"></span>購買地點地圖</h2>
-    <div class="mapbox">
-      <div class="maphead">
-        <div><b id="mapName">—</b><small id="mapSub"></small></div>
-        <a id="mapLink" href="#" target="_blank" rel="noopener">在 Google 地圖開啟</a>
-      </div>
-      <iframe id="mapFrame" title="購買地點地圖" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </div>
-    <div class="shops" id="shopList"></div>
-    <p class="note">※ 營業時間與販售品項可能調整，出發前請再到官網確認。點清單上的藍色地點標籤，地圖會跳到那間店。</p>
+    <p class="note">※ 營業時間與販售品項可能調整，出發前請再到官網確認。點卡片上的地點標籤，就能切換該伴手禮的地圖。</p>
     <p style="text-align:center;margin-top:20px"><a class="nl" href="index.html" style="text-decoration:none;font-size:15px;padding:6px 16px;border:3px solid var(--ink);border-radius:999px;background:var(--pink)">← 回行程首頁</a></p>
   </div>
 </section>
@@ -342,6 +334,14 @@ let area = "全部";
 const allGifts = () => GIFTS.concat(st.custom.map(c => ({...c, custom:true,
   ic:ICON("#FFFCF6",`<rect x="14" y="24" width="36" height="26" rx="4" fill="#B9DAA5" ${SK}/><rect x="10" y="18" width="44" height="10" rx="3" fill="#F2A497" ${SK}/><path d="M32 18v32" ${SK}/>`)})));
 
+const sel = {};
+const selOf = g => sel[g.id] && g.s.includes(sel[g.id]) ? sel[g.id] : g.s[0];
+const mapInner = (k, giftName) => { const s = SHOPS[k]; return `
+  <div class="maphead"><div><b>${esc(s.n)}</b><small>${esc(s.a)}・行程 ${esc(s.day)}｜${esc(s.sub)}</small></div>
+  <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.q)}" target="_blank" rel="noopener">開啟導航</a></div>
+  <iframe title="${esc(giftName)}：${esc(s.n)} 地圖" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+    src="https://www.google.com/maps?q=${encodeURIComponent(s.q)}&z=16&output=embed"></iframe>`; };
+
 function renderFilters(){
   $("filters").innerHTML = AREAS.map(a=>`<button class="chip" type="button" aria-pressed="${a===area}" data-a="${a}">${a}</button>`).join("");
 }
@@ -354,8 +354,9 @@ function renderGifts(){
         <h3>${esc(g.n)}${g.hot?'<span class="hot">人氣</span>':''}</h3>
         <div class="brand">${esc(g.b||"自訂")}</div>
         ${g.why?`<p class="why">${esc(g.why)}</p>`:''}
-        <div class="where">${g.s.map(k=>`<button type="button" class="loc" data-shop="${k}">📍 ${esc(SHOPS[k].n)}</button>`).join("")}</div>
+        <div class="where">${g.s.map(k=>`<button type="button" class="loc" data-gift="${g.id}" data-shop="${k}" aria-pressed="${k===selOf(g)}">📍 ${esc(SHOPS[k].n)}</button>`).join("")}</div>
       </div>
+      <div class="mapbox" id="map-${g.id}">${mapInner(selOf(g), g.n)}</div>
       <div class="grow">
         <label><input type="checkbox" class="ck" data-done="${g.id}" ${st.done[g.id]?'checked':''}>已買</label>
         <input type="text" data-note="${g.id}" value="${esc(st.note[g.id]||'')}" placeholder="要送誰／買幾盒" aria-label="${esc(g.n)} 備註">
@@ -367,27 +368,12 @@ function renderGifts(){
   $("gBought").textContent = all.filter(g=>st.done[g.id]).length;
 }
 
-let curShop = "cts";
-function renderShops(){
-  $("shopList").innerHTML = Object.entries(SHOPS).map(([k,s])=>`
-    <button type="button" class="shop" data-shop="${k}" aria-current="${k===curShop}">
-      <svg class="pin" viewBox="0 0 30 30" aria-hidden="true"><path d="M15 28 C6 18 5 14 5 11 a10 10 0 0 1 20 0 c0 3-1 7-10 17Z" fill="${k===curShop?'#F2A497':'#A8D3E6'}" stroke="#3E3A39" stroke-width="2.5"/><circle cx="15" cy="11" r="3.5" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2"/></svg>
-      <span>${esc(s.n)}<small>${esc(s.a)}・行程 ${esc(s.day)}</small></span>
-    </button>`).join("");
-}
-function showMap(k, scroll){
-  curShop = k; const s = SHOPS[k];
-  $("mapName").textContent = s.n;
-  $("mapSub").textContent = s.sub;
-  $("mapFrame").src = "https://www.google.com/maps?q=" + encodeURIComponent(s.q) + "&z=16&output=embed";
-  $("mapLink").href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(s.q);
-  renderShops();
-  if (scroll) $("map").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
-}
 
 $("filters").addEventListener("click", e=>{ const b=e.target.closest(".chip"); if(!b) return; area=b.dataset.a; renderFilters(); renderGifts(); });
 $("giftList").addEventListener("click", e=>{
-  const l=e.target.closest(".loc"); if(l) return showMap(l.dataset.shop, true);
+  const l=e.target.closest(".loc"); if(l){ const id=l.dataset.gift; sel[id]=l.dataset.shop;
+    const g=allGifts().find(x=>x.id===id); $("map-"+id).innerHTML=mapInner(l.dataset.shop, g.n);
+    l.parentElement.querySelectorAll(".loc").forEach(b=>b.setAttribute("aria-pressed", b===l)); return; }
   const d=e.target.closest(".del"); if(d){ st.custom=st.custom.filter(c=>c.id!==d.dataset.del); delete st.done[d.dataset.del]; delete st.note[d.dataset.del]; save(); renderGifts(); }
 });
 $("giftList").addEventListener("change", e=>{
@@ -396,7 +382,6 @@ $("giftList").addEventListener("change", e=>{
 $("giftList").addEventListener("input", e=>{
   const k=e.target.dataset.note; if(k){ st.note[k]=e.target.value; save(); }
 });
-$("shopList").addEventListener("click", e=>{ const b=e.target.closest(".shop"); if(b) showMap(b.dataset.shop, false); });
 
 $("addShop").innerHTML = Object.entries(SHOPS).map(([k,s])=>`<option value="${k}">${esc(s.n)}</option>`).join("");
 $("addForm").addEventListener("submit", e=>{
@@ -406,7 +391,7 @@ $("addForm").addEventListener("submit", e=>{
   save(); $("addName").value=""; area="全部"; renderFilters(); renderGifts();
 });
 
-renderFilters(); renderGifts(); showMap("cts", false);
+renderFilters(); renderGifts();
 </script>
 </body>
 </html>
