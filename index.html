@@ -152,6 +152,26 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
 .todo-link .arrow{margin-left:auto;font-size:22px;width:40px;height:40px;border:var(--b);border-radius:50%;display:grid;place-items:center;background:var(--yellow);flex:none}
 .todo-link:hover{transform:translate(-2px,-2px)}
 .todo-link svg{flex:none;border:var(--b);border-radius:18px}
+
+/* weather */
+.wx-loc{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.wx-now{display:flex;align-items:center;gap:14px}
+.wx-now .big{width:84px;height:84px;flex:none;border:var(--b);border-radius:20px;background:var(--blue);display:grid;place-items:center}
+.wx-now .big svg{width:64px;height:64px}
+.wx-now b{font-size:44px;font-weight:400;line-height:1}
+.wx-now p{font-size:14px}
+.wx-days{display:grid;grid-template-columns:repeat(7,minmax(64px,1fr));gap:6px;overflow-x:auto;margin-top:14px;padding-bottom:4px}
+.wx-d{border:2px solid var(--ink);border-radius:14px;padding:6px 2px;text-align:center;background:var(--paper);font-size:12px;line-height:1.35}
+.wx-d svg{width:32px;height:32px;display:block;margin:2px auto}
+.wx-d .hi{font-size:14px}
+.wx-d.today{background:var(--yellow)}
+.wx-note{font-size:13px;margin-top:10px;background:var(--soft);border:2px dashed var(--ink);border-radius:14px;padding:8px 12px}
+.wx-err{font-size:14px}
+/* nav button in timeline */
+.navbtn{display:inline-flex;align-items:center;gap:4px;margin-left:auto;font-size:12px;text-decoration:none;padding:1px 10px;border:2px solid var(--ink);border-radius:999px;background:var(--pink);white-space:nowrap}
+.navbtn:active{transform:translateY(1px)}
+.chip{font-family:inherit;color:var(--ink);font-size:14px;padding:4px 14px;border:2px solid var(--ink);border-radius:999px;background:var(--white);cursor:pointer;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--yellow);box-shadow:2px 2px 0 var(--ink)}
 </style>
 </head>
 <body>
@@ -162,6 +182,7 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
       <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><g stroke="#3E3A39" stroke-width="2.5" stroke-linecap="round"><path d="M13 2v22M3.5 7.5l19 11M3.5 18.5l19-11"/></g><circle cx="13" cy="13" r="3.5" fill="#A8D3E6" stroke="#3E3A39" stroke-width="2.5"/></svg>
       札幌雪旅
     </span>
+    <a class="nl" href="#weather">天氣</a>
     <a class="nl" href="#flight">航班</a>
     <a class="nl" href="#days">行程</a>
     <a class="nl" href="todo.html">待辦</a>
@@ -261,6 +282,18 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
       <div class="cd"><b id="cdS">--</b><span>秒</span></div>
     </div>
     <p class="cd-msg" id="cdMsg">距離出發還有</p>
+  </div>
+</section>
+
+<!-- WEATHER -->
+<section id="weather">
+  <div class="wrap">
+    <h2><span class="dot" style="background:var(--blue)"></span>即時天氣</h2>
+    <div class="card">
+      <div class="wx-loc" role="group" aria-label="選擇地點" id="wxLoc"></div>
+      <div id="wxBody" aria-live="polite"><p class="wx-err">天氣載入中…</p></div>
+      <p class="wx-note" id="wxNote"></p>
+    </div>
   </div>
 </section>
 
@@ -447,6 +480,46 @@ const DAYS = [
 ];
 
 
+
+/* ====== 導航目的地（Google 地圖搜尋字） ====== */
+const HOTEL_Q = "ホテルマイステイズ札幌駅北口";
+const NAVQ = {
+ "桃園起飛 AirAsia FD242":"桃園國際機場 第一航廈",
+ "抵達新千歲機場":"新千歳空港 国際線ターミナル",
+ "JR 快速エアポート → 札幌站":"札幌駅",
+ "寄放行李＋札幌站午餐":HOTEL_Q,
+ "入住 MyStays 札幌站北口":HOTEL_Q,
+ "大通公園・白色燈樹節":"大通公園 札幌",
+ "慕尼黑聖誕市集 in Sapporo":"大通公園 2丁目 札幌",
+ "晚餐：成吉思汗烤羊肉":"成吉思汗だるま 本店",
+ "JR 函館本線 → 小樽站":"小樽駅",
+ "三角市場 海鮮丼早午餐":"三角市場 小樽",
+ "小樽運河散步":"小樽運河 浅草橋",
+ "堺町通り商店街":"堺町通り商店街 小樽",
+ "傍晚運河點燈":"小樽運河",
+ "JR 返回札幌":"札幌駅",
+ "二条市場 早餐":"二条市場 札幌",
+ "札幌市時計台":"札幌市時計台",
+ "北海道廳舊本廳舍（紅磚廳舍）":"北海道庁旧本庁舎",
+ "狸小路商店街":"狸小路商店街",
+ "市電 → 藻岩山纜車":"もいわ山ロープウェイ 山麓駅",
+ "藻岩山展望台 夜景":"藻岩山 山頂展望台",
+ "薄野 元祖拉麵橫丁":"元祖さっぽろラーメン横丁",
+ "地鐵東西線 → 圓山公園站":"円山公園駅",
+ "北海道神宮參拜":"北海道神宮",
+ "六花亭 神宮茶屋店":"六花亭 神宮茶屋店",
+ "白色戀人公園":"白い恋人パーク",
+ "JR Tower 展望室 T38":"JRタワー展望室 T38",
+ "晚餐：札幌站周邊":"札幌ステラプレイス",
+ "札幌啤酒博物館":"サッポロビール博物館",
+ "啤酒園 成吉思汗吃到飽":"サッポロビール園",
+ "巴士 → 定山溪溫泉":"札幌駅前バスターミナル",
+ "定山溪 日歸溫泉＋河童散步":"定山渓温泉",
+ "巴士返回札幌＋採買伴手禮":"大丸札幌店",
+ "MyStays 退房":HOTEL_Q,
+ "JR 快速エアポート → 新千歲":"札幌駅",
+ "國際線報到＋機場美食":"新千歳空港 国際線ターミナル"
+};
 /* ====== 渲染 ====== */
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -483,7 +556,7 @@ function renderDay(anim){
         <div class="bx">
           <div class="ti">${esc(it.ti)}${it.must?'<span class="must-b">必去</span>':''}</div>
           <div class="ds">${esc(it.ds)}</div>
-          <div class="tags">${it.tags.map(t=>`<span class="tg ${t[0]}">${esc(t[1])}</span>`).join("")}</div>
+          <div class="tags">${it.tags.map(t=>`<span class="tg ${t[0]}">${esc(t[1])}</span>`).join("")}${NAVQ[it.ti]?`<a class="navbtn" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(NAVQ[it.ti])}&travelmode=transit" target="_blank" rel="noopener" aria-label="導航到 ${esc(it.ti)}">🧭 導航</a>`:""}</div>
         </div>
       </li>`).join("")}
     </ol>
@@ -509,6 +582,74 @@ $("dayTabs").addEventListener("keydown", e=>{
 })();
 renderTabs(); renderDay(false);
 
+
+/* ====== 即時天氣（Open-Meteo，免金鑰） ====== */
+const WX_LOCS = [
+  {n:"札幌", lat:43.0618, lon:141.3545},
+  {n:"小樽", lat:43.1907, lon:140.9947},
+  {n:"定山溪", lat:42.9676, lon:141.1606},
+  {n:"新千歲機場", lat:42.7752, lon:141.6923}
+];
+let wxCur = 0;
+const WK = ["日","一","二","三","四","五","六"];
+function wxKind(c){
+  if(c===0) return ["sun","晴"]; if(c<=2) return ["part","晴時多雲"]; if(c===3) return ["cloud","陰"];
+  if(c===45||c===48) return ["fog","霧"];
+  if((c>=71&&c<=77)||c===85||c===86) return ["snow", c>=75||c===86?"大雪":"下雪"];
+  if(c>=95) return ["storm","雷雨"];
+  if((c>=51&&c<=67)||(c>=80&&c<=82)) return ["rain", c>=63&&c<=67||c>=81?"大雨":"小雨"];
+  return ["cloud","多雲"];
+}
+const WX_SVG = {
+  sun:`<svg viewBox="0 0 48 48"><g stroke="#3E3A39" stroke-width="3" stroke-linecap="round"><path d="M24 4v6M24 38v6M4 24h6M38 24h6M10 10l4 4M34 34l4 4M38 10l-4 4M14 34l-4 4"/></g><circle cx="24" cy="24" r="9" fill="#F6D27A" stroke="#3E3A39" stroke-width="3"/></svg>`,
+  part:`<svg viewBox="0 0 48 48"><circle cx="18" cy="18" r="8" fill="#F6D27A" stroke="#3E3A39" stroke-width="3"/><path d="M14 38h22a7 7 0 0 0-2-13.5 10 10 0 0 0-19 2A6 6 0 0 0 14 38Z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/></svg>`,
+  cloud:`<svg viewBox="0 0 48 48"><path d="M12 36h24a8 8 0 0 0-2-15.5 11 11 0 0 0-21 2.5A6.5 6.5 0 0 0 12 36Z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/></svg>`,
+  fog:`<svg viewBox="0 0 48 48"><path d="M12 28h24a8 8 0 0 0-2-15 11 11 0 0 0-21 2.5A6.5 6.5 0 0 0 12 28Z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/><path d="M8 35h32M12 41h24" stroke="#3E3A39" stroke-width="3" stroke-linecap="round"/></svg>`,
+  rain:`<svg viewBox="0 0 48 48"><path d="M12 28h24a8 8 0 0 0-2-15 11 11 0 0 0-21 2.5A6.5 6.5 0 0 0 12 28Z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/><path d="M16 34l-2 6M25 34l-2 6M34 34l-2 6" stroke="#A8D3E6" stroke-width="3.5" stroke-linecap="round"/></svg>`,
+  snow:`<svg viewBox="0 0 48 48"><path d="M12 28h24a8 8 0 0 0-2-15 11 11 0 0 0-21 2.5A6.5 6.5 0 0 0 12 28Z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/><g fill="#A8D3E6" stroke="#3E3A39" stroke-width="2"><circle cx="15" cy="37" r="3"/><circle cx="25" cy="41" r="3"/><circle cx="34" cy="36" r="3"/></g></svg>`,
+  storm:`<svg viewBox="0 0 48 48"><path d="M12 28h24a8 8 0 0 0-2-15 11 11 0 0 0-21 2.5A6.5 6.5 0 0 0 12 28Z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/><path d="M25 30l-5 8h6l-4 7" fill="none" stroke="#F6D27A" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/></svg>`
+};
+function wxTips(tmin, snow){
+  const t=[];
+  if(tmin<=-5) t.push("低於 -5°C，發熱衣＋羽絨外套＋毛帽手套全副武裝");
+  else if(tmin<=0) t.push("會結冰，路面很滑，穿防滑雪靴或加冰爪");
+  else t.push("早晚偏冷，洋蔥式穿搭最方便");
+  if(snow>=1) t.push("預計下雪，帶把小傘、注意 JR 誤點");
+  return t.join("；");
+}
+function renderWxLoc(){
+  $("wxLoc").innerHTML = WX_LOCS.map((l,i)=>`<button type="button" class="chip" aria-pressed="${i===wxCur}" data-wx="${i}">${l.n}</button>`).join("");
+}
+async function loadWx(){
+  const l = WX_LOCS[wxCur];
+  $("wxBody").innerHTML = '<p class="wx-err">天氣載入中…</p>';
+  try{
+    const u = `https://api.open-meteo.com/v1/forecast?latitude=${l.lat}&longitude=${l.lon}&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,relative_humidity_2m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,snowfall_sum&timezone=Asia%2FTokyo&forecast_days=7`;
+    const r = await fetch(u); if(!r.ok) throw 0;
+    const d = await r.json(), c = d.current, k = wxKind(c.weather_code);
+    const days = d.daily.time.map((t,i)=>{
+      const dt = new Date(t+"T00:00:00+09:00"), kk = wxKind(d.daily.weather_code[i]);
+      return `<div class="wx-d ${i===0?'today':''}">${i===0?'今天':(dt.getMonth()+1)+'/'+dt.getDate()}<br>週${WK[dt.getDay()]}${WX_SVG[kk[0]]}<span class="hi">${Math.round(d.daily.temperature_2m_max[i])}°</span> / ${Math.round(d.daily.temperature_2m_min[i])}°<br>☂ ${d.daily.precipitation_probability_max[i] ?? 0}%${d.daily.snowfall_sum[i]>0?`<br>❄ ${d.daily.snowfall_sum[i].toFixed(1)}cm`:''}</div>`;
+    }).join("");
+    $("wxBody").innerHTML = `
+      <div class="wx-now">
+        <div class="big" aria-hidden="true">${WX_SVG[k[0]]}</div>
+        <div><b>${Math.round(c.temperature_2m)}°C</b><p>${l.n}・${k[1]}・體感 ${Math.round(c.apparent_temperature)}°C<br>風速 ${Math.round(c.wind_speed_10m)} km/h・濕度 ${c.relative_humidity_2m}%</p></div>
+      </div>
+      <div class="wx-days" aria-label="未來 7 天預報">${days}</div>
+      <p class="wx-note" style="background:var(--white)">👕 穿搭建議：${esc(wxTips(d.daily.temperature_2m_min[0], d.daily.snowfall_sum[0]))}</p>`;
+  }catch(e){
+    $("wxBody").innerHTML = '<p class="wx-err">天氣暫時載入失敗，請稍後重新整理頁面。</p>';
+  }
+}
+(function(){
+  const trip = new Date("2026-12-11T00:00:00+09:00"), days = Math.ceil((trip - Date.now())/86400000);
+  $("wxNote").textContent = days > 7
+    ? `📅 出發還有 ${days} 天，目前顯示的是即時天氣與未來 7 天預報；出發前一週就能看到旅行期間的預報。12 月札幌平均約 -4°C～2°C，常下雪。`
+    : "資料來源：Open-Meteo，約每小時更新。";
+})();
+$("wxLoc").addEventListener("click", e=>{ const b=e.target.closest(".chip"); if(!b) return; wxCur=+b.dataset.wx; renderWxLoc(); loadWx(); });
+renderWxLoc(); loadWx();
 
 /* 倒數 */
 function tick(){
