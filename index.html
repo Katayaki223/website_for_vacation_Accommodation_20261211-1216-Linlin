@@ -6,6 +6,13 @@
 <title>札幌雪國小旅行</title>
 <meta name="description" content="2026/12/11–12/16 北海道札幌六天五夜行程">
 <meta name="theme-color" content="#FFFCF6">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="札幌雪旅">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
@@ -172,6 +179,21 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
 .navbtn:active{transform:translateY(1px)}
 .chip{font-family:inherit;color:var(--ink);font-size:14px;padding:4px 14px;border:2px solid var(--ink);border-radius:999px;background:var(--white);cursor:pointer;white-space:nowrap}
 .chip[aria-pressed="true"]{background:var(--yellow);box-shadow:2px 2px 0 var(--ink)}
+
+/* transit */
+.tr-next{display:flex;gap:12px;align-items:center;background:var(--yellow);border:var(--b);border-radius:18px;padding:12px}
+.tr-next .ic{width:56px;height:56px;flex:none;border:var(--b);border-radius:16px;background:var(--white);display:grid;place-items:center;font-size:28px}
+.tr-next b{font-weight:400;font-size:18px;display:block;line-height:1.3}
+.tr-next .cd2{font-size:22px;font-variant-numeric:tabular-nums}
+.tr-next small{font-size:13px}
+.tr-list{list-style:none;display:grid;gap:8px;margin-top:12px}
+.tr-list li{display:grid;grid-template-columns:62px 1fr auto;gap:8px;align-items:center;padding:8px 10px;border:2px solid var(--ink);border-radius:14px;background:var(--paper);font-size:14px}
+.tr-list li.past{opacity:.45}
+.tr-list li.nx{background:#FFF1EE;box-shadow:3px 3px 0 var(--ink)}
+.tr-list .when{font-size:12.5px;line-height:1.3;text-align:center}
+.tr-list .when b{display:block;font-size:16px;font-weight:400}
+.tr-list .what small{display:block;font-size:12px}
+.tr-more{font-family:inherit;font-size:13px;color:var(--ink);border:2px solid var(--ink);border-radius:999px;background:var(--white);padding:3px 12px;cursor:pointer;margin-top:10px}
 </style>
 </head>
 <body>
@@ -187,6 +209,7 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
     <a class="nl" href="#days">行程</a>
     <a class="nl" href="todo.html">待辦</a>
     <a class="nl" href="gifts.html">伴手禮</a>
+    <a class="nl" href="money.html">分帳</a>
     <a class="nl" href="#hotel">住宿</a>
   </div>
 </nav>
@@ -297,6 +320,19 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
   </div>
 </section>
 
+<!-- TRANSIT -->
+<section id="transit">
+  <div class="wrap">
+    <h2><span class="dot" style="background:var(--pink)"></span>下一班交通</h2>
+    <div class="card">
+      <div id="trNext"></div>
+      <ul class="tr-list" id="trList"></ul>
+      <button class="tr-more" type="button" id="trMore" aria-expanded="false">顯示全部交通</button>
+      <p class="note">※ 時間是行程規劃的預計出發時間，不是實際時刻表；點「查班次」會用 Google 地圖查當下的電車／巴士班次。</p>
+    </div>
+  </div>
+</section>
+
 <!-- FLIGHT -->
 <section id="flight">
   <div class="wrap">
@@ -331,6 +367,11 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
     <a class="card todo-link gift-link" href="gifts.html" style="margin-top:14px">
       <svg viewBox="0 0 84 84" width="72" height="72" aria-hidden="true"><rect width="84" height="84" rx="18" fill="#F2A497"/><g class="float"><rect x="20" y="36" width="44" height="32" rx="5" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3"/><rect x="16" y="26" width="52" height="12" rx="4" fill="#F6D27A" stroke="#3E3A39" stroke-width="3"/><path d="M42 26v42" stroke="#3E3A39" stroke-width="3"/><path d="M42 26 q-14-14-18-2 q2 4 18 2Z M42 26 q14-14 18-2 q-2 4-18 2Z" fill="#A8D3E6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/></g></svg>
       <span><b>伴手禮清單＋地圖</b><br><small>白色戀人、ROYCE'、六花亭…在哪買一次看</small></span>
+      <span class="arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="card todo-link" href="money.html" style="margin-top:14px">
+      <svg viewBox="0 0 84 84" width="72" height="72" aria-hidden="true"><rect width="84" height="84" rx="18" fill="#F6D27A"/><g class="float"><circle cx="34" cy="44" r="18" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3"/><text x="34" y="52" text-anchor="middle" font-size="22" fill="#3E3A39" font-family="Huninn,sans-serif">¥</text><circle cx="56" cy="34" r="14" fill="#F2A497" stroke="#3E3A39" stroke-width="3"/><text x="56" y="40" text-anchor="middle" font-size="13" fill="#3E3A39" font-family="Huninn,sans-serif">NT</text></g></svg>
+      <span><b>匯率換算＋旅費分帳</b><br><small>日圓台幣互換、記下誰付錢，自動算出誰該給誰</small></span>
       <span class="arrow" aria-hidden="true">→</span>
     </a>
   </div>
@@ -382,6 +423,20 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
           <a href="https://www.mystays.com/zh-tw/" target="_blank" rel="noopener">🏨 飯店官網</a>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+<!-- OFFLINE -->
+<section id="offline">
+  <div class="wrap">
+    <h2><span class="dot" style="background:var(--green)"></span>離線也能看</h2>
+    <div class="card">
+      <p style="font-size:15px">打開過一次之後，沒有網路也能看行程、待辦、伴手禮和分帳（地圖、天氣、匯率需要網路，離線時會顯示上次的資料）。</p>
+      <div class="tags" style="margin-top:10px;display:grid;gap:8px">
+        <div class="bx" style="background:var(--paper);border:2px solid var(--ink);border-radius:14px;padding:10px 12px;font-size:14px">🍎 <b style="font-weight:400">iPhone</b>：用 Safari 開啟 → 點下方「分享」→「加入主畫面」</div>
+        <div class="bx" style="background:var(--paper);border:2px solid var(--ink);border-radius:14px;padding:10px 12px;font-size:14px">🤖 <b style="font-weight:400">Android</b>：用 Chrome 開啟 → 右上角「⋮」→「加到主畫面」或「安裝應用程式」</div>
+      </div>
+      <p class="note" id="offState"></p>
     </div>
   </div>
 </section>
@@ -651,6 +706,49 @@ async function loadWx(){
 $("wxLoc").addEventListener("click", e=>{ const b=e.target.closest(".chip"); if(!b) return; wxCur=+b.dataset.wx; renderWxLoc(); loadWx(); });
 renderWxLoc(); loadWx();
 
+/* ====== 下一班交通 ====== */
+const TRANSIT = [
+  {t:"2026-12-11T03:30", ic:"✈", n:"桃園機場報到", d:"AirAsia FD242 05:55 起飛（台灣時間）", tz:"+08:00", to:"桃園國際機場 第一航廈"},
+  {t:"2026-12-11T12:00", ic:"🚆", n:"JR 快速エアポート", d:"新千歲機場 → 札幌站・約 40 分", from:"新千歳空港駅", to:"札幌駅"},
+  {t:"2026-12-12T09:00", ic:"🚆", n:"JR 函館本線", d:"札幌站 → 小樽站・約 40 分", from:"札幌駅", to:"小樽駅"},
+  {t:"2026-12-12T18:00", ic:"🚆", n:"JR 回札幌", d:"小樽站 → 札幌站", from:"小樽駅", to:"札幌駅"},
+  {t:"2026-12-13T15:30", ic:"🚋", n:"市電＋纜車", d:"前往藻岩山（ロープウェイ入口站轉接駁巴士）", from:"狸小路駅 市電", to:"もいわ山ロープウェイ 山麓駅"},
+  {t:"2026-12-14T09:30", ic:"🚇", n:"地鐵 南北線→東西線", d:"札幌站 → 大通 → 圓山公園站", from:"さっぽろ駅 地下鉄", to:"円山公園駅"},
+  {t:"2026-12-14T13:30", ic:"🚇", n:"地鐵東西線", d:"圓山公園站 → 宮の沢站（白色戀人公園）", from:"円山公園駅", to:"宮の沢駅"},
+  {t:"2026-12-15T09:40", ic:"🚌", n:"巴士 → 札幌啤酒博物館", d:"札幌站前出發，約 10 分", from:"札幌駅", to:"サッポロビール博物館"},
+  {t:"2026-12-15T13:30", ic:"🚌", n:"かっぱライナー號（需預約）", d:"札幌站前 → 定山溪・約 60–70 分", from:"札幌駅前バスターミナル", to:"定山渓温泉"},
+  {t:"2026-12-15T18:30", ic:"🚌", n:"巴士回札幌", d:"定山溪 → 札幌站前", from:"定山渓温泉", to:"札幌駅"},
+  {t:"2026-12-16T10:30", ic:"🚆", n:"JR 快速エアポート", d:"札幌站 → 新千歲機場・約 40 分", from:"札幌駅", to:"新千歳空港駅"},
+  {t:"2026-12-16T14:00", ic:"✈", n:"AirAsia FD243 起飛", d:"新千歲 → 桃園，17:55 抵達", to:"新千歳空港 国際線ターミナル"}
+];
+let trAll = false;
+const trTime = x => new Date(x.t + ":00" + (x.tz || "+09:00"));
+const trLink = x => "https://www.google.com/maps/dir/?api=1" + (x.from ? "&origin="+encodeURIComponent(x.from) : "") + "&destination="+encodeURIComponent(x.to) + "&travelmode=transit";
+function renderTransit(){
+  const now = Date.now();
+  const idx = TRANSIT.findIndex(x => trTime(x) > now - 10*60000);
+  if (idx === -1) { $("trNext").innerHTML = '<p>旅程的交通都搭完了，辛苦啦！🎉</p>'; }
+  else {
+    const x = TRANSIT[idx], ms = trTime(x) - now;
+    let left;
+    if (ms <= 0) left = "就是現在！";
+    else { const s=Math.floor(ms/1000), d=Math.floor(s/86400), hh=Math.floor(s%86400/3600), mm=Math.floor(s%3600/60);
+      left = d>0 ? `還有 ${d} 天 ${hh} 小時` : hh>0 ? `還有 ${hh} 小時 ${mm} 分` : `還有 ${mm} 分 ${String(s%60).padStart(2,"0")} 秒`; }
+    $("trNext").innerHTML = `<div class="tr-next"><div class="ic" aria-hidden="true">${x.ic}</div>
+      <div style="flex:1;min-width:0"><small>${x.t.slice(5,10).replace("-","/")} ${x.t.slice(11)}${x.tz?"（台灣時間）":""}</small><b>${esc(x.n)}</b><small>${esc(x.d)}</small><div class="cd2">${left}</div></div>
+      <a class="navbtn" style="margin:0;align-self:flex-start" href="${trLink(x)}" target="_blank" rel="noopener">🧭 查班次</a></div>`;
+  }
+  const list = trAll ? TRANSIT : TRANSIT.slice(Math.max(0,idx===-1?TRANSIT.length-3:idx+1), (idx===-1?TRANSIT.length:idx+4));
+  $("trList").innerHTML = list.map(x=>{ const i=TRANSIT.indexOf(x);
+    return `<li class="${i<idx||idx===-1?'past':''} ${i===idx?'nx':''}"><span class="when">${x.t.slice(5,10).replace("-","/")}<b>${x.t.slice(11)}</b></span>
+    <span class="what">${x.ic} ${esc(x.n)}<small>${esc(x.d)}</small></span>
+    <a class="navbtn" style="margin:0" href="${trLink(x)}" target="_blank" rel="noopener">查班次</a></li>`; }).join("");
+  $("trMore").textContent = trAll ? "只顯示接下來的" : "顯示全部交通";
+  $("trMore").setAttribute("aria-expanded", trAll);
+}
+$("trMore").addEventListener("click", ()=>{ trAll=!trAll; renderTransit(); });
+renderTransit(); setInterval(renderTransit, 1000);
+
 /* 倒數 */
 function tick(){
   let ms = DEPART - Date.now();
@@ -665,6 +763,9 @@ function tick(){
   $("cdS").textContent=String(s%60).padStart(2,"0");
 }
 tick(); setInterval(tick,1000);
+</script>
+<script>
+if ("serviceWorker" in navigator) { window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").then(()=>{ const o=document.getElementById("offState"); if(o) o.textContent="✅ 離線功能已啟用"; }).catch(()=>{}); }); }
 </script>
 </body>
 </html>

@@ -6,6 +6,13 @@
 <title>北海道伴手禮清單</title>
 <meta name="description" content="2026/12/11–12/16 北海道札幌六天五夜行程">
 <meta name="theme-color" content="#FFFCF6">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="札幌雪旅">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
@@ -221,6 +228,7 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
     <a class="nl" href="index.html#days">行程</a>
     <a class="nl" href="todo.html">待辦</a>
     <a class="nl" href="gifts.html" aria-current="page" style="background:var(--yellow)">伴手禮</a>
+    <a class="nl" href="money.html">分帳</a>
     <a class="nl" href="index.html#hotel">住宿</a>
   </div>
 </nav>
@@ -448,6 +456,9 @@ $("acc").addEventListener("click", e=>{
   if(openShop) b.scrollIntoView({block:"nearest", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto":"smooth"});
 });
 renderFilters(); renderGifts(); renderAcc();
+</script>
+<script>
+if ("serviceWorker" in navigator) { window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(()=>{}); }); }
 </script>
 </body>
 </html>
