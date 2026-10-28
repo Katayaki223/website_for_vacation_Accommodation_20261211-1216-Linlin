@@ -1,5 +1,5 @@
 /* 札幌雪旅 離線快取 */
-const VERSION = "sapporo-v1";
+const VERSION = "sapporo-v2";
 const CORE = ["./", "index.html", "todo.html", "gifts.html", "money.html",
   "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
 
