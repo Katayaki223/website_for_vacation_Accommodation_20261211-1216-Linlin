@@ -295,7 +295,8 @@ footer{text-align:center;padding:30px 0 50px;font-size:13px}
     <div class="tagrow">
       <span class="pill">⛄ 白色燈樹節</span>
       <span class="pill" style="background:var(--green)">🎄 聖誕市集</span>
-      <span class="pill" style="background:var(--blue)">🚃 小樽運河</span>
+      <span class="pill" style="background:var(--blue)">🐧 旭山動物園</span>
+      <span class="pill" style="background:var(--white)">🐻 洞爺湖・登別</span>
       <span class="pill" style="background:var(--pink)">♨ 定山溪</span>
     </div>
     <div class="countdown" aria-live="polite">
@@ -458,6 +459,8 @@ const DEPART = new Date("2026-12-11T05:55:00+08:00"); // 出發時間（台灣�
 /* ====== 圖示 ====== */
 const S = 'stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"';
 const ICONS = {
+  zoo:`<svg viewBox="0 0 84 84"><rect width="84" height="84" fill="#A8D3E6"/><path d="M0 66 H84 V84 H0Z" fill="#FFFCF6" ${S}/><g class="float"><ellipse cx="42" cy="46" rx="16" ry="22" fill="#3E3A39"/><ellipse cx="42" cy="50" rx="10" ry="16" fill="#FFFCF6"/><circle cx="37" cy="36" r="2.4" fill="#FFFCF6"/><circle cx="47" cy="36" r="2.4" fill="#FFFCF6"/><path d="M39 41 l3 4 3-4Z" fill="#F6D27A" stroke="#3E3A39" stroke-width="1.5"/><path d="M34 68 h6 M44 68 h6" stroke="#F6D27A" stroke-width="4" stroke-linecap="round"/><circle cx="33" cy="42" r="2.5" fill="#F2A497"/><circle cx="51" cy="42" r="2.5" fill="#F2A497"/></g></svg>`,
+  lake:`<svg viewBox="0 0 84 84"><rect width="84" height="84" fill="#A8D3E6"/><path d="M8 52 L30 24 L44 40 L56 30 L78 52Z" fill="#B9DAA5" ${S}/><path d="M24 32 L30 24 L36 32 L30 30Z" fill="#FFFCF6" ${S}/><g class="float"><path d="M54 24 q-4-6 0-10 q4-4 0-9" fill="none" stroke="#FFFCF6" stroke-width="3" stroke-linecap="round"/></g><path d="M0 54 Q42 48 84 54 V84 H0Z" fill="#FFFCF6" ${S}/><path d="M10 64 q8-4 16 0 M46 70 q8-4 16 0" fill="none" stroke="#A8D3E6" stroke-width="3" stroke-linecap="round"/><circle cx="68" cy="66" r="6" fill="#F2A497" ${S}/></svg>`,
   plane:`<svg viewBox="0 0 84 84"><rect width="84" height="84" fill="#A8D3E6"/><g class="float"><path d="M14 46 L70 30 Q78 28 76 36 L22 54Z" fill="#FFFCF6" ${S}/><path d="M38 40 L30 24 L40 22 L52 36Z M30 50 L36 64 L44 60 L42 46Z" fill="#F2A497" ${S}/><path d="M14 46 L10 36 L18 38 L22 44Z" fill="#F6D27A" ${S}/></g><circle cx="20" cy="18" r="6" fill="#FFFCF6" ${S}/></svg>`,
   canal:`<svg viewBox="0 0 84 84"><rect width="84" height="84" fill="#A8D3E6"/><path d="M6 44 h30 v-14 l10 -8 10 8 v14 h22 v8 H6Z" fill="#F2A497" ${S}/><rect x="14" y="32" width="10" height="12" fill="#F6D27A" ${S}/><path d="M0 58 Q21 52 42 58 T84 58 V84 H0Z" fill="#B9DAA5" ${S}/><g class="float"><circle cx="66" cy="40" r="4" fill="#F6D27A" ${S} class="blink"/><path d="M66 44v12" ${S}/></g><path d="M10 70 q8-4 16 0 M40 74 q8-4 16 0" fill="none" ${S}/></svg>`,
   tower:`<svg viewBox="0 0 84 84"><rect width="84" height="84" fill="#A8D3E6"/><g class="sway"><path d="M38 14 L46 14 L50 70 L34 70Z" fill="#F2A497" ${S}/><rect x="32" y="30" width="20" height="8" rx="2" fill="#FFFCF6" ${S}/><circle cx="42" cy="10" r="3" fill="#F6D27A" ${S} class="blink"/></g><path d="M0 70 H84 V84 H0Z" fill="#FFFCF6" ${S}/><g class="snow" fill="#FFFCF6" stroke="#3E3A39" stroke-width="1.2"><circle cx="14" cy="0" r="2.5" style="animation-duration:5s"/><circle cx="68" cy="0" r="2.5" style="animation-duration:6s;animation-delay:-2s"/></g></svg>`,
@@ -483,26 +486,30 @@ const DAYS = [
    {tm:"18:00", ti:"慕尼黑聖誕市集 in Sapporo", ds:"大通公園 2 丁目，熱紅酒、德國香腸、聖誕小物。", tags:[["walk","步行"]], must:true},
    {tm:"19:30", ti:"晚餐：成吉思汗烤羊肉", ds:"薄野一帶名店多（如「だるま」需排隊），或選站前湯咖哩。", tags:[["metro","南北線 薄野站"]]}
  ]},
- { d:"12/12", w:"六", title:"小樽一日遊", sub:"運河、玻璃工藝與海鮮丼", icon:"canal",
-   tip:"小樽坡道多、雪後很滑，建議穿有抓地力的雪靴或加冰爪。",
+ { d:"12/12", w:"六", title:"旭山動物園・美瑛・富良野一日遊", sub:"Klook 跟團：動物園、網紅樹、白鬚瀑布、青池、精靈露台", icon:"zoo",
+   link:"https://www.klook.com/zh-TW/activity/105219-asahikawa-zoo-ningle-terrace-shirahige-waterfall-day-tour-private-tour-sapporo/",
+   tip:"集合時間與地點會在出發前一天 17:00–21:00 寄信通知（記得看垃圾信件匣）。行程約 10 小時、車程長，帶行動電源和小點心；企鵝散步要看積雪，12 月中旬不一定已開始。",
    items:[
-   {tm:"09:00", ti:"JR 函館本線 → 小樽站", ds:"札幌站出發約 35–45 分鐘，坐右側靠海座位可看石狩灣。", tags:[["jr","JR 快速"]]},
-   {tm:"10:00", ti:"三角市場 海鮮丼早午餐", ds:"小樽站旁，螃蟹、海膽、鮭魚卵一次滿足。", tags:[["walk","步行 1 分"]], must:true},
-   {tm:"11:30", ti:"小樽運河散步", ds:"淺草橋拍經典運河倉庫群。", tags:[["walk","步行 10 分"]], must:true},
-   {tm:"13:00", ti:"堺町通り商店街", ds:"北一硝子、小樽音樂盒堂、LeTAO 本店起司蛋糕。", tags:[["walk","步行"]]},
-   {tm:"16:00", ti:"傍晚運河點燈", ds:"天黑後瓦斯燈亮起，雪中運河最有氣氛。", tags:[["walk","步行"]], must:true},
-   {tm:"18:00", ti:"JR 返回札幌", ds:"晚餐可在札幌站 APIA / 拉麵共和國解決。", tags:[["jr","JR"]]}
+   {tm:"07:30", ti:"札幌集合出發（Klook 一日遊）", ds:"依前一天通知的集合點報到，建議提早 10 分鐘到，先到可選前排座位。", tags:[["bus","遊覽車"]], must:true},
+   {tm:"10:30", ti:"旭山動物園", ds:"北極熊館、企鵝館、海豹的圓柱水槽；冬季有機會看到企鵝散步。園內可吃午餐。", tags:[["bus","遊覽車"],["walk","步行"]], must:true},
+   {tm:"13:30", ti:"美瑛 網紅樹（Ken & Mary 之樹）", ds:"丘陵上的白楊樹，雪原中特別好拍。", tags:[["bus","遊覽車"]]},
+   {tm:"14:30", ti:"白鬚瀑布", ds:"藍色美瑛川與白色瀑布，冬天常被雪包圍，從白金大橋上看。", tags:[["bus","遊覽車"]]},
+   {tm:"15:15", ti:"美瑛 白金青池", ds:"Apple 桌布同款景點，冬季傍晚有點燈。", tags:[["bus","遊覽車"]], must:true},
+   {tm:"16:30", ti:"富良野 森林精靈露台", ds:"森林裡的小木屋手作小店，天黑點燈後最有童話感。若臨時關閉會改去拓真館白樺林。", tags:[["bus","遊覽車"],["walk","步行"]], must:true},
+   {tm:"19:00", ti:"返回札幌", ds:"回到札幌市區解散，實際時間依路況而定。", tags:[["bus","遊覽車"]]},
+   {tm:"19:30", ti:"晚餐：薄野 元祖拉麵橫丁", ds:"一日遊回來吃碗熱騰騰的味噌拉麵。", tags:[["metro","南北線 薄野站"]]}
  ]},
- { d:"12/13", w:"日", title:"札幌市區＋藻岩山夜景", sub:"市場、時計台、新日本三大夜景", icon:"ropeway",
-   tip:"藻岩山纜車可先在官網確認營業時間與天候狀況，風大時可能停駛。",
+ { d:"12/13", w:"日", title:"洞爺湖・登別地獄谷一日遊", sub:"Klook 跟團：洞爺湖、Lake Hill Farm、昭和新山熊牧場、地獄谷", icon:"lake",
+   link:"https://www.klook.com/zh-TW/activity/161918-from-sapporo-winter-only-lake-toya-bear-ranch-noboribetsu/",
+   tip:"冬季限定路線，集合資訊同樣在前一天晚上寄信通知。熊牧場門票自理；雪地摩托是自費加購方案（約 45–50 分鐘）。暴雪封路時行程可能調整。",
    items:[
-   {tm:"08:30", ti:"二条市場 早餐", ds:"海鮮丼、烤帆立貝，比中午人少。", tags:[["metro","東豐線 大通站"],["walk","步行"]]},
-   {tm:"10:00", ti:"札幌市時計台", ds:"札幌地標，對面二樓有拍照平台。", tags:[["walk","步行 10 分"]]},
-   {tm:"11:00", ti:"北海道廳舊本廳舍（紅磚廳舍）", ds:"雪中的紅磚建築超好拍。", tags:[["walk","步行 8 分"]]},
-   {tm:"12:30", ti:"狸小路商店街", ds:"藥妝、唐吉訶德、扭蛋，順便吃湯咖哩午餐。", tags:[["walk","步行"]]},
-   {tm:"15:30", ti:"市電 → 藻岩山纜車", ds:"市電「ロープウェイ入口」下車轉免費接駁巴士。", tags:[["tram","市電"],["bus","接駁巴士"]]},
-   {tm:"16:30", ti:"藻岩山展望台 夜景", ds:"日落到全黑的魔幻時刻，札幌夜景一覽無遺。", tags:[["tram","纜車＋迷你纜車"]], must:true},
-   {tm:"19:00", ti:"薄野 元祖拉麵橫丁", ds:"味噌拉麵是札幌代表。", tags:[["tram","市電 薄野"]]}
+   {tm:"07:30", ti:"札幌集合出發（Klook 一日遊）", ds:"依前一天通知的集合點報到，找 JRT 導遊旗。", tags:[["bus","遊覽車"]], must:true},
+   {tm:"10:00", ti:"洞爺湖展望台（可選雪地摩托）", ds:"雪中湖景與羊蹄山；有加購的話在這裡體驗雪地摩托，安全帽手套店家提供。", tags:[["bus","遊覽車"]], must:true},
+   {tm:"11:30", ti:"Lake Hill Farm 牧場", ds:"紅屋頂牧場小屋，必喝現打鮮奶、吃牛奶冰淇淋，可順便簡單午餐。", tags:[["bus","遊覽車"]]},
+   {tm:"13:00", ti:"昭和新山熊牧場", ds:"近距離看北海道棕熊、可以餵食（門票自理），旁邊就是冒著煙的昭和新山。", tags:[["bus","遊覽車"],["walk","步行"]], must:true},
+   {tm:"15:00", ti:"登別地獄谷", ds:"雪地裡冒著硫磺蒸氣的火山谷，走木棧道看「冰與火」的景色。路面濕滑要小心。", tags:[["bus","遊覽車"],["walk","步行"]], must:true},
+   {tm:"18:30", ti:"返回札幌", ds:"回到札幌市區解散，實際時間依路況而定。", tags:[["bus","遊覽車"]]},
+   {tm:"19:00", ti:"晚餐＋逛狸小路商店街", ds:"湯咖哩當晚餐，順便逛藥妝、唐吉訶德。", tags:[["metro","南北線 大通站"],["walk","步行"]]}
  ]},
  { d:"12/14", w:"一", title:"北海道神宮＋白色戀人公園", sub:"參拜祈福、甜點工廠、站前高空夜景", icon:"shrine",
    tip:"札幌啤酒博物館週一休館，所以改到明天安排。",
@@ -539,6 +546,19 @@ const DAYS = [
 /* ====== 導航目的地（Google 地圖搜尋字） ====== */
 const HOTEL_Q = "ホテルマイステイズ札幌駅北口";
 const NAVQ = {
+ "札幌集合出發（Klook 一日遊）":"札幌駅",
+ "旭山動物園":"旭山動物園",
+ "美瑛 網紅樹（Ken & Mary 之樹）":"ケンとメリーの木",
+ "白鬚瀑布":"白ひげの滝",
+ "美瑛 白金青池":"白金青い池",
+ "富良野 森林精靈露台":"ニングルテラス",
+ "返回札幌":"札幌駅",
+ "晚餐：薄野 元祖拉麵橫丁":"元祖さっぽろラーメン横丁",
+ "洞爺湖展望台（可選雪地摩托）":"洞爺湖",
+ "Lake Hill Farm 牧場":"レークヒル・ファーム",
+ "昭和新山熊牧場":"昭和新山熊牧場",
+ "登別地獄谷":"登別地獄谷",
+ "晚餐＋逛狸小路商店街":"狸小路商店街",
  "桃園起飛 AirAsia FD242":"桃園國際機場 第一航廈",
  "抵達新千歲機場":"新千歳空港 国際線ターミナル",
  "JR 快速エアポート → 札幌站":"札幌駅",
@@ -615,7 +635,7 @@ function renderDay(anim){
         </div>
       </li>`).join("")}
     </ol>
-    <p class="daytip">💡 ${esc(d.tip)}</p>`;
+    <p class="daytip">💡 ${esc(d.tip)}</p>${d.link?`<p style="margin-top:10px"><a class="navbtn" style="margin:0;font-size:14px;padding:4px 14px;background:var(--green)" href="${d.link}" target="_blank" rel="noopener">🎫 查看 Klook 行程頁</a></p>`:""}`;
   if(anim){ p.classList.remove("bounce"); void p.offsetWidth; p.classList.add("bounce"); }
 }
 function select(i, focus){
@@ -641,7 +661,8 @@ renderTabs(); renderDay(false);
 /* ====== 即時天氣（Open-Meteo，免金鑰） ====== */
 const WX_LOCS = [
   {n:"札幌", lat:43.0618, lon:141.3545},
-  {n:"小樽", lat:43.1907, lon:140.9947},
+  {n:"旭川・美瑛", lat:43.7685, lon:142.4799},
+  {n:"洞爺湖・登別", lat:42.5650, lon:140.8190},
   {n:"定山溪", lat:42.9676, lon:141.1606},
   {n:"新千歲機場", lat:42.7752, lon:141.6923}
 ];
@@ -710,9 +731,8 @@ renderWxLoc(); loadWx();
 const TRANSIT = [
   {t:"2026-12-11T03:30", ic:"✈", n:"桃園機場報到", d:"AirAsia FD242 05:55 起飛（台灣時間）", tz:"+08:00", to:"桃園國際機場 第一航廈"},
   {t:"2026-12-11T12:00", ic:"🚆", n:"JR 快速エアポート", d:"新千歲機場 → 札幌站・約 40 分", from:"新千歳空港駅", to:"札幌駅"},
-  {t:"2026-12-12T09:00", ic:"🚆", n:"JR 函館本線", d:"札幌站 → 小樽站・約 40 分", from:"札幌駅", to:"小樽駅"},
-  {t:"2026-12-12T18:00", ic:"🚆", n:"JR 回札幌", d:"小樽站 → 札幌站", from:"小樽駅", to:"札幌駅"},
-  {t:"2026-12-13T15:30", ic:"🚋", n:"市電＋纜車", d:"前往藻岩山（ロープウェイ入口站轉接駁巴士）", from:"狸小路駅 市電", to:"もいわ山ロープウェイ 山麓駅"},
+  {t:"2026-12-12T07:30", ic:"🚌", n:"Klook 一日遊集合", d:"旭山動物園・美瑛・富良野，集合點依前一天通知", to:"札幌駅"},
+  {t:"2026-12-13T07:30", ic:"🚌", n:"Klook 一日遊集合", d:"洞爺湖・登別地獄谷，集合點依前一天通知", to:"札幌駅"},
   {t:"2026-12-14T09:30", ic:"🚇", n:"地鐵 南北線→東西線", d:"札幌站 → 大通 → 圓山公園站", from:"さっぽろ駅 地下鉄", to:"円山公園駅"},
   {t:"2026-12-14T13:30", ic:"🚇", n:"地鐵東西線", d:"圓山公園站 → 宮の沢站（白色戀人公園）", from:"円山公園駅", to:"宮の沢駅"},
   {t:"2026-12-15T09:40", ic:"🚌", n:"巴士 → 札幌啤酒博物館", d:"札幌站前出發，約 10 分", from:"札幌駅", to:"サッポロビール博物館"},
